@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './database/typeorm-config.service';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import databaseConfig from './database/config/database.config';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import databaseConfig from './database/config/database.config';
         return new DataSource(options).initialize();
       },
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
