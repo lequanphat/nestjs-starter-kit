@@ -1,10 +1,16 @@
 import 'dotenv/config';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { AllConfigType } from './config/config.type';
 import { useContainer } from 'class-validator';
+import {
+  ClassSerializerInterceptor,
+  ValidationPipe,
+  VersioningType,
+} from '@nestjs/common';
+import validationOptions from './utils/validation-options';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -20,6 +26,14 @@ async function bootstrap() {
       exclude: [],
     },
   );
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
+
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
+  app.useGlobalPipes(new ValidationPipe(validationOptions));
 
   // config swagger
   const options = new DocumentBuilder()
