@@ -19,8 +19,7 @@ export const AppDataSource = new DataSource({
   migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
   cli: {
     entitiesDir: 'src',
-
-    subscribersDir: 'subscriber',
+    migrationsDir: 'src/database/migrations',
   },
   extra: {
     max: process.env.DATABASE_MAX_CONNECTIONS
