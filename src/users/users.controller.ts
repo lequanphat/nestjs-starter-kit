@@ -12,7 +12,7 @@ import { QueryUserDto } from './dto/query-user.dto';
 import {
   InfinityPaginationResponse,
   InfinityPaginationResponseDto,
-} from '../utils/dto/infinity-pagination-response.dto';
+} from '../common/dto/infinity-pagination-response.dto';
 import { User } from './domain/user';
 import { infinityPagination } from 'src/utils/infinity-pagination';
 
