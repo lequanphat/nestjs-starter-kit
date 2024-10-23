@@ -7,11 +7,12 @@ import * as bcrypt from 'bcryptjs';
 import { User } from './domain/user';
 import { FilterUserDto, SortUserDto } from './dto/query-user.dto';
 import { IPaginationOptions } from '../utils/types/pagination-options';
-import { UserRepository } from './infrastructure/users.repository';
+import { UserRepository } from './infrastructure/repositories/users.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Role } from 'src/roles/domain/role';
 import { RoleEnum } from 'src/roles/roles.enum';
 import { AuthProvidersEnum } from 'src/auth/auth-providers.enum';
+import { PaginationType } from 'src/utils/types/pagination';
 
 @Injectable()
 export class UsersService {
@@ -86,7 +87,7 @@ export class UsersService {
     filterOptions?: FilterUserDto | null;
     sortOptions?: SortUserDto[] | null;
     paginationOptions: IPaginationOptions;
-  }): Promise<User[]> {
+  }): Promise<PaginationType<User>> {
     return this.usersRepository.findManyWithPagination({
       filterOptions,
       sortOptions,

@@ -9,12 +9,11 @@ import {
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { QueryUserDto } from './dto/query-user.dto';
-import {
-  InfinityPaginationResponse,
-  InfinityPaginationResponseDto,
-} from '../common/dto/infinity-pagination-response.dto';
 import { User } from './domain/user';
-import { infinityPagination } from 'src/utils/infinity-pagination';
+import {
+  PaginationType,
+  PaginationTypeResponse,
+} from 'src/utils/types/pagination';
 
 @ApiTags('Users')
 @Controller({
@@ -25,32 +24,27 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiOkResponse({
-    type: InfinityPaginationResponse(User),
+    type: PaginationTypeResponse(User),
   })
   @SerializeOptions({
     groups: ['admin'],
   })
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(
-    @Query() query: QueryUserDto,
-  ): Promise<InfinityPaginationResponseDto<User>> {
+  async findAll(@Query() query: QueryUserDto): Promise<PaginationType<User>> {
     const page = query?.page ?? 1;
     let limit = query?.limit ?? 10;
     if (limit > 50) {
       limit = 50;
     }
 
-    return infinityPagination(
-      await this.usersService.findManyWithPagination({
-        filterOptions: query?.filters,
-        sortOptions: query?.sort,
-        paginationOptions: {
-          page,
-          limit,
-        },
-      }),
-      { page, limit },
-    );
+    return this.usersService.findManyWithPagination({
+      filterOptions: query?.filters,
+      sortOptions: query?.sort,
+      paginationOptions: {
+        page,
+        limit,
+      },
+    });
   }
 }
