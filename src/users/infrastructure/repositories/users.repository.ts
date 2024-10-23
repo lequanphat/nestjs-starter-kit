@@ -1,7 +1,8 @@
-import { User } from '../domain/user';
-import { FilterUserDto, SortUserDto } from '../dto/query-user.dto';
-import { IPaginationOptions } from '../../utils/types/pagination-options';
+import { User } from '../../domain/user';
+import { FilterUserDto, SortUserDto } from '../../dto/query-user.dto';
+import { IPaginationOptions } from '../../../utils/types/pagination-options';
 import { NullableType } from 'src/utils/types/nullable.type';
+import { PaginationType } from 'src/utils/types/pagination';
 
 export abstract class UserRepository {
   abstract create(
@@ -16,7 +17,7 @@ export abstract class UserRepository {
     filterOptions?: FilterUserDto | null;
     sortOptions?: SortUserDto[] | null;
     paginationOptions: IPaginationOptions;
-  }): Promise<User[]>;
+  }): Promise<PaginationType<User>>;
 
   abstract findByEmail(email: User['email']): Promise<NullableType<User>>;
 }

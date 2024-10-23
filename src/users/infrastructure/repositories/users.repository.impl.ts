@@ -4,11 +4,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { UserRepository } from './users.repository';
 import { UserEntity } from '../entities/user.entity';
-import { User } from '../domain/user';
+import { User } from '../../domain/user';
 import { UserMapper } from '../mappers/user.mapper';
-import { FilterUserDto, SortUserDto } from '../dto/query-user.dto';
+import { FilterUserDto, SortUserDto } from '../../dto/query-user.dto';
 import { IPaginationOptions } from 'src/utils/types/pagination-options';
 import { NullableType } from 'src/utils/types/nullable.type';
+import { PaginationType } from 'src/utils/types/pagination';
 
 @Injectable()
 export class UsersRepositoryImpl implements UserRepository {
@@ -33,7 +34,7 @@ export class UsersRepositoryImpl implements UserRepository {
     filterOptions?: FilterUserDto | null;
     sortOptions?: SortUserDto[] | null;
     paginationOptions: IPaginationOptions;
-  }): Promise<User[]> {
+  }): Promise<PaginationType<User>> {
     const where: FindOptionsWhere<UserEntity> = {};
     if (filterOptions?.roles?.length) {
       where.role = filterOptions.roles.map((role) => ({
@@ -41,7 +42,7 @@ export class UsersRepositoryImpl implements UserRepository {
       }));
     }
 
-    const entities = await this.usersRepository.find({
+    const [results, total] = await this.usersRepository.findAndCount({
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,
       where: where,
@@ -54,7 +55,17 @@ export class UsersRepositoryImpl implements UserRepository {
       ),
     });
 
-    return entities.map((user) => UserMapper.toDomain(user));
+    return {
+      data: results.map((user) => UserMapper.toDomain(user)),
+      meta: {
+        page: paginationOptions.page,
+        pageSize: paginationOptions.limit,
+        totalItems: results.length,
+        totalPages: Math.ceil(total / paginationOptions.limit),
+        hasNextPage:
+          Math.ceil(total / paginationOptions.limit) > paginationOptions.page,
+      },
+    };
   }
 
   async findByEmail(email: User['email']): Promise<NullableType<User>> {
