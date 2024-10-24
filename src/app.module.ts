@@ -22,6 +22,7 @@ import { AppConfig } from './config/app-config.type';
       isGlobal: true,
       load: [appConfig, databaseConfig, authConfig, mailConfig],
       envFilePath: ['.env'],
+      cache: true,
     }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
