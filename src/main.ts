@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import validationOptions from './utils/validation-options';
 import { HttpExceptionFilter } from './utils/http-exception-filter';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -20,6 +21,17 @@ async function bootstrap() {
   const configService = app.get(ConfigService<AllConfigType>);
 
   app.enableShutdownHooks();
+
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"], // allow everything from the same origin
+          scriptSrc: ["'self'", "'unsafe-inline'"], // only allow internal scripts
+        },
+      },
+    }),
+  );
 
   app.setGlobalPrefix(
     configService.getOrThrow('app.apiPrefix', { infer: true }),
