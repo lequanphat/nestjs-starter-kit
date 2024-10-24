@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RoleEntity } from '../../../roles/infrastructure/entites/role.entity';
-import { RoleEnum } from '../../../roles/roles.enum';
+import { RoleEnum } from '../../../utils/enums/roles.enum';
 
 @Injectable()
 export class RoleSeedService {

@@ -10,8 +10,8 @@ import { IPaginationOptions } from '../utils/types/pagination-options';
 import { UserRepository } from './infrastructure/repositories/users.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Role } from 'src/roles/domain/role';
-import { RoleEnum } from 'src/roles/roles.enum';
-import { AuthProvidersEnum } from 'src/auth/auth-providers.enum';
+import { RoleEnum } from 'src/utils/enums/roles.enum';
+import { AuthProvidersEnum } from 'src/utils/enums/auth-providers.enum';
 import { PaginationType } from 'src/utils/types/pagination';
 import { NullableType } from 'src/utils/types/nullable.type';
 

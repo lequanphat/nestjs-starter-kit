@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Query,
   SerializeOptions,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
@@ -14,8 +15,14 @@ import {
   PaginationType,
   PaginationTypeResponse,
 } from 'src/utils/types/pagination';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from 'src/utils/decorators/roles.decorator';
+import { RoleEnum } from 'src/utils/enums/roles.enum';
+import { RolesGuard } from 'src/roles/roles.guard';
 
 @ApiTags('Users')
+@Roles(RoleEnum.ADMIN)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller({
   path: 'users',
   version: '1',

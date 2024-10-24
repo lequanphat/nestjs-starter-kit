@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { EntityRelationalHelper } from '../../../utils/relational-entity-helper';
-import { AuthProvidersEnum } from '../../../auth/auth-providers.enum';
+import { AuthProvidersEnum } from '../../../utils/enums/auth-providers.enum';
 import { RoleEntity } from '../../../roles/infrastructure/entites/role.entity';
 
 @Entity({
