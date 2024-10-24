@@ -1,6 +1,7 @@
 import {
   HttpStatus,
   Injectable,
+  UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -19,6 +20,7 @@ import { AuthProvidersEnum } from './auth-providers.enum';
 import { User } from 'src/users/domain/user';
 import { JwtPayloadType } from './types/jwt-payload.type';
 import { NullableType } from 'src/utils/types/nullable.type';
+import { JwtRefreshPayloadType } from './types/jwt-refresh-payload.type';
 
 @Injectable()
 export class AuthService {
@@ -125,6 +127,29 @@ export class AuthService {
 
   async me(userJwtPayload: JwtPayloadType): Promise<NullableType<User>> {
     return this.usersService.findById(userJwtPayload.id);
+  }
+
+  async refreshToken(
+    data: Pick<JwtRefreshPayloadType, 'id'>,
+  ): Promise<Omit<LoginResponseDto, 'user'>> {
+    const user = await this.usersService.findById(data.id);
+
+    if (!user?.role) {
+      throw new UnauthorizedException();
+    }
+
+    const { token, refreshToken, tokenExpires } = await this.getTokensData({
+      id: data.id,
+      role: {
+        id: user.role.id,
+      },
+    });
+
+    return {
+      token,
+      refreshToken,
+      tokenExpires,
+    };
   }
 
   private async getTokensData(data: { id: User['id']; role: User['role'] }) {

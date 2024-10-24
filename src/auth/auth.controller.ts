@@ -18,6 +18,7 @@ import { LoginResponseDto } from './dto/login-response.dto';
 import { UserLoginDto } from './dto/user-login.dto';
 import { User } from '../users/domain/user';
 import { NullableType } from '../utils/types/nullable.type';
+import { RefreshTokenResponseDto } from './dto/refresh-token-response.dto';
 
 @ApiTags('Auth')
 @Controller({
@@ -57,5 +58,21 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   public me(@Request() request): Promise<NullableType<User>> {
     return this.service.me(request.user);
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    type: RefreshTokenResponseDto,
+  })
+  @SerializeOptions({
+    groups: ['me'],
+  })
+  @Post('refresh')
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @HttpCode(HttpStatus.OK)
+  public refresh(@Request() request): Promise<RefreshTokenResponseDto> {
+    return this.service.refreshToken({
+      id: request.user.id,
+    });
   }
 }
