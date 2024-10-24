@@ -13,6 +13,7 @@ import { Role } from 'src/roles/domain/role';
 import { RoleEnum } from 'src/roles/roles.enum';
 import { AuthProvidersEnum } from 'src/auth/auth-providers.enum';
 import { PaginationType } from 'src/utils/types/pagination';
+import { NullableType } from 'src/utils/types/nullable.type';
 
 @Injectable()
 export class UsersService {
@@ -93,5 +94,13 @@ export class UsersService {
       sortOptions,
       paginationOptions,
     });
+  }
+
+  findByEmail(email: User['email']): Promise<NullableType<User>> {
+    return this.usersRepository.findByEmail(email);
+  }
+
+  findById(id: User['id']): Promise<NullableType<User>> {
+    return this.usersRepository.findById(id);
   }
 }

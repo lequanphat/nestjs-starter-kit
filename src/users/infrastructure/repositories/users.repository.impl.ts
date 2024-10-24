@@ -77,4 +77,12 @@ export class UsersRepositoryImpl implements UserRepository {
 
     return entity ? UserMapper.toDomain(entity) : null;
   }
+
+  async findById(id: User['id']): Promise<NullableType<User>> {
+    const entity = await this.usersRepository.findOne({
+      where: { id: Number(id) },
+    });
+
+    return entity ? UserMapper.toDomain(entity) : null;
+  }
 }
