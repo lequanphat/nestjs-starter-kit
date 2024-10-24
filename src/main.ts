@@ -11,6 +11,7 @@ import {
   VersioningType,
 } from '@nestjs/common';
 import validationOptions from './utils/validation-options';
+import { HttpExceptionFilter } from './utils/http-exception-filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -31,9 +32,11 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
 
+  app.useGlobalPipes(new ValidationPipe(validationOptions));
+
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
-  app.useGlobalPipes(new ValidationPipe(validationOptions));
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // config swagger
   const options = new DocumentBuilder()

@@ -1,5 +1,4 @@
 import {
-  HttpStatus,
   Injectable,
   UnauthorizedException,
   UnprocessableEntityException,
@@ -73,28 +72,19 @@ export class AuthService {
 
     if (!user) {
       throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          email: 'notFound',
-        },
+        email: 'notFound',
       });
     }
 
     if (user.provider !== AuthProvidersEnum.EMAIL) {
       throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          email: `needLoginViaProvider:${user.provider}`,
-        },
+        email: `needLoginViaProvider:${user.provider}`,
       });
     }
 
     if (!user.password) {
       throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          password: 'incorrectPassword',
-        },
+        password: 'incorrectPassword',
       });
     }
 
@@ -105,10 +95,7 @@ export class AuthService {
 
     if (!isValidPassword) {
       throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          password: 'incorrectPassword',
-        },
+        password: 'incorrectPassword',
       });
     }
 

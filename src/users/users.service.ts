@@ -1,8 +1,4 @@
-import {
-  HttpStatus,
-  Injectable,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { User } from './domain/user';
 import { FilterUserDto, SortUserDto } from './dto/query-user.dto';
@@ -38,10 +34,7 @@ export class UsersService {
       );
       if (userObject) {
         throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            email: 'emailAlreadyExists',
-          },
+          email: 'emailAlreadyExists',
         });
       }
       email = createUserDto.email;
@@ -55,10 +48,7 @@ export class UsersService {
         .includes(String(createUserDto.role.id));
       if (!roleObject) {
         throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            role: 'roleNotExists',
-          },
+          role: 'roleNotExists',
         });
       }
 
